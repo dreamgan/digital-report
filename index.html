@@ -85,35 +85,23 @@
         <div style="font-weight: bold; letter-spacing: 1px;">טוען מערכת...</div>
     </div>
 
-    <!-- המערכת עצמה -->
-    <iframe id="app-frame" allow="clipboard-read; clipboard-write; geolocation" onload="hideLoader()"></iframe>
-
     <script>
         // הגדרת כתובת הגוגל סקריפט - המשתמש יצטרך לעדכן זאת פעם אחת כאן
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzf22eIzN1QKLY81VqEZKgTYSdGvnV1bMxh0G_3RuyP51JKSpJLuZANHhUIA98ERzzB/exec";
 
         function initApp() {
-            const frame = document.getElementById('app-frame');
-            const urlParams = window.location.search;
-
-            // בונה את הקישור הסופי עם כל הפרמטרים שהגיעו מהדף העוטף (URL Parameters)
-            // זה מאפשר להגיע ישירות לדפי הורים, דוחות וכו' דרך הכתובת של GitHub
-            frame.src = GOOGLE_SCRIPT_URL + urlParams;
+            // גוגל חוסמת הטמעת Apps Script ב-iframe מדומיין אחר
+            // (X-Frame-Options: SAMEORIGIN + CSP frame-ancestors 'self'),
+            // ולכן מפנים ישירות במקום להטמיע. כל הפרמטרים מה-URL עוברים הלאה
+            // (למשל ?branch=kaplan, דפי הורים, דוחות).
+            const target = GOOGLE_SCRIPT_URL + window.location.search;
+            window.location.replace(target);
         }
 
-        // הפעלת האפליקציה
+        // הפעלת האפליקציה (מסך הטעינה נשאר עד שההפניה מתבצעת)
         initApp();
 
-        function hideLoader() {
-            const loader = document.getElementById('loader');
-            if (!loader) return;
-            loader.style.opacity = '0';
-            setTimeout(() => {
-                loader.style.display = 'none';
-            }, 500);
-        }
-
-        // אופציונלי: תיקון גובה במסכים ניידים (Mobile Safe)
+        // תיקון גובה במסכים ניידים (Mobile Safe) — למסך הטעינה
         function resize() {
             document.body.style.height = window.innerHeight + 'px';
         }
